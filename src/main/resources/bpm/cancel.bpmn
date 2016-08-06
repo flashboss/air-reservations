@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://activiti.org/bpmn20" id="adhoc-definitions">
+  <process id="cancel" name="Cancel Activiti Process" isExecutable="true">
+    <startEvent id="startevent1" name="Start"></startEvent>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <serviceTask id="servicetask4" name="Cancel" activiti:class="it.vige.reservations.bpm.Cancel"></serviceTask>
+    <sequenceFlow id="flow6" sourceRef="servicetask4" targetRef="usertask8"></sequenceFlow>
+    <sequenceFlow id="flow7" sourceRef="startevent1" targetRef="servicetask4"></sequenceFlow>
+    <userTask id="usertask8" name="CANCEL: #{ticket.id}" activiti:candidateGroups="staff" activiti:dueDate="#{ticket.flight.arriveTime}">
+      <extensionElements>
+        <activiti:formProperty id="user" name="User" type="string" expression="#{ticket.userName}" writable="false"></activiti:formProperty>
+        <activiti:formProperty id="from" name="From" type="string" expression="#{ticket.flight.addressFrom.toString()}" writable="false"></activiti:formProperty>
+        <activiti:formProperty id="to" name="To" type="string" expression="#{ticket.flight.addressTo.toString()}" writable="false"></activiti:formProperty>
+        <activiti:formProperty id="startTime" name="Start time" type="date" expression="#{ticket.flight.startTime}" writable="false"></activiti:formProperty>
+        <activiti:formProperty id="endTime" name="Arrive Time" type="date" expression="#{ticket.flight.arriveTime}" writable="false"></activiti:formProperty>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow8" sourceRef="usertask8" targetRef="endevent1"></sequenceFlow>
+    <textAnnotation id="textannotation1">
+      <text>The user executes the cancel of the flight</text>
+    </textAnnotation>
+    <association id="association1" sourceRef="textannotation1" targetRef="servicetask4"></association>
+    <textAnnotation id="textannotation2">
+      <text>A notification of cancel is sent to the staff</text>
+    </textAnnotation>
+    <association id="association2" sourceRef="textannotation2" targetRef="usertask8"></association>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_cancel">
+    <bpmndi:BPMNPlane bpmnElement="cancel" id="BPMNPlane_cancel">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="50.0" y="106.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="460.0" y="190.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="servicetask4" id="BPMNShape_servicetask4">
+        <omgdc:Bounds height="55.0" width="105.0" x="220.0" y="120.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertask8" id="BPMNShape_usertask8">
+        <omgdc:Bounds height="81.0" width="105.0" x="350.0" y="240.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="textannotation1" id="BPMNShape_textannotation1">
+        <omgdc:Bounds height="61.0" width="100.0" x="400.0" y="50.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="textannotation2" id="BPMNShape_textannotation2">
+        <omgdc:Bounds height="71.0" width="149.0" x="150.0" y="340.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="272.0" y="175.0"></omgdi:waypoint>
+        <omgdi:waypoint x="402.0" y="240.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="85.0" y="123.0"></omgdi:waypoint>
+        <omgdi:waypoint x="220.0" y="147.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="402.0" y="240.0"></omgdi:waypoint>
+        <omgdi:waypoint x="477.0" y="225.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="association1" id="BPMNEdge_association1">
+        <omgdi:waypoint x="400.0" y="80.0"></omgdi:waypoint>
+        <omgdi:waypoint x="272.0" y="120.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="association2" id="BPMNEdge_association2">
+        <omgdi:waypoint x="224.0" y="340.0"></omgdi:waypoint>
+        <omgdi:waypoint x="402.0" y="321.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://activiti.org/bpmn20" id="adhoc-definitions">
+  <process id="scheduler" name="Scheduler Activiti Process" isExecutable="true">
+    <startEvent id="timerstartevent1" name="Timer start">
+      <timerEventDefinition>
+        <timeCycle>0 0/60 * * * ?</timeCycle>
+      </timerEventDefinition>
+    </startEvent>
+    <endEvent id="endevent2" name="End"></endEvent>
+    <subProcess id="subprocess1" name="Sub Process">
+      <serviceTask id="servicetask1" name="Get Reservation" activiti:class="it.vige.reservations.bpm.GetTicketsToSchedule"></serviceTask>
+      <serviceTask id="mailtask2" name="Send Invite to checkout" activiti:type="mail">
+        <extensionElements>
+          <activiti:field name="to">
+            <activiti:expression><![CDATA[#{execution.engineServices.identityService.getUserInfo(ticketToAlert.userName,"email")}]]></activiti:expression>
+          </activiti:field>
+          <activiti:field name="from">
+            <activiti:string><![CDATA[no_reply@vige.it]]></activiti:string>
+          </activiti:field>
+          <activiti:field name="subject">
+            <activiti:string><![CDATA[You must checkout the flight]]></activiti:string>
+          </activiti:field>
+          <activiti:field name="html">
+            <activiti:expression><![CDATA[Your flight will expire until 48 hours. The starting date is: #{ticketToAlert.flight.startTime} . Click <a href="http://localhost:8080/#tasks/taskId?category=inbox">here</a> to checkout]]></activiti:expression>
+          </activiti:field>
+        </extensionElements>
+        <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="ticketsToAlert" activiti:elementVariable="ticketToAlert"></multiInstanceLoopCharacteristics>
+      </serviceTask>
+      <startEvent id="startevent2" name="Start"></startEvent>
+      <sequenceFlow id="flow14" sourceRef="startevent2" targetRef="servicetask1"></sequenceFlow>
+      <endEvent id="endevent3" name="End"></endEvent>
+      <serviceTask id="servicetask2" name="Block Reservation" activiti:class="it.vige.reservations.bpm.CancelTickets"></serviceTask>
+      <sequenceFlow id="flow20" sourceRef="servicetask1" targetRef="mailtask2"></sequenceFlow>
+      <sequenceFlow id="flow22" sourceRef="mailtask2" targetRef="servicetask3"></sequenceFlow>
+      <serviceTask id="servicetask3" name="Alert Reservation" activiti:class="it.vige.reservations.bpm.AlertTickets"></serviceTask>
+      <sequenceFlow id="flow24" sourceRef="servicetask3" targetRef="servicetask2"></sequenceFlow>
+      <sequenceFlow id="flow25" sourceRef="servicetask2" targetRef="endevent3"></sequenceFlow>
+      <textAnnotation id="textannotation3">
+        <text>It searches all tickets to checkout 2 days before the arrive time and all tickets requested after the arrive time of the flight</text>
+      </textAnnotation>
+      <textAnnotation id="textannotation4">
+        <text>Sends the ivite to checkout for each ticket with the arrive time at 2 days before</text>
+      </textAnnotation>
+      <textAnnotation id="textannotation5">
+        <text>Sets the ticket as aleterd state, so it will not resent to the user</text>
+      </textAnnotation>
+      <textAnnotation id="textannotation6">
+        <text>All tickets without checkout with the expired arrive time of the flight are canceled</text>
+      </textAnnotation>
+      <association id="association3" sourceRef="textannotation6" targetRef="servicetask2"></association>
+      <association id="association4" sourceRef="textannotation5" targetRef="servicetask3"></association>
+      <association id="association5" sourceRef="textannotation4" targetRef="mailtask2"></association>
+      <association id="association6" sourceRef="textannotation3" targetRef="servicetask1"></association>
+    </subProcess>
+    <sequenceFlow id="flow11" sourceRef="timerstartevent1" targetRef="parallelgateway2"></sequenceFlow>
+    <sequenceFlow id="flow12" sourceRef="subprocess1" targetRef="parallelgateway1"></sequenceFlow>
+    <serviceTask id="servicetask5" name="Expire old tickets" activiti:class="it.vige.reservations.bpm.ExpireTickets"></serviceTask>
+    <sequenceFlow id="flow26" sourceRef="servicetask5" targetRef="parallelgateway1"></sequenceFlow>
+    <parallelGateway id="parallelgateway1" name="Parallel Gateway"></parallelGateway>
+    <sequenceFlow id="flow27" sourceRef="parallelgateway1" targetRef="endevent2"></sequenceFlow>
+    <parallelGateway id="parallelgateway2" name="Parallel Gateway"></parallelGateway>
+    <sequenceFlow id="flow28" sourceRef="parallelgateway2" targetRef="subprocess1"></sequenceFlow>
+    <sequenceFlow id="flow29" sourceRef="parallelgateway2" targetRef="servicetask5"></sequenceFlow>
+    <textAnnotation id="textannotation1">
+      <text>Each hour a cron starts to search the expired tickets</text>
+    </textAnnotation>
+    <association id="association1" sourceRef="textannotation1" targetRef="timerstartevent1"></association>
+    <textAnnotation id="textannotation2">
+      <text>All expired tickets after the arrive time of the flight are deleted</text>
+    </textAnnotation>
+    <association id="association2" sourceRef="textannotation2" targetRef="servicetask5"></association>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_scheduler">
+    <bpmndi:BPMNPlane bpmnElement="scheduler" id="BPMNPlane_scheduler">
+      <bpmndi:BPMNShape bpmnElement="timerstartevent1" id="BPMNShape_timerstartevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="60.0" y="300.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent2" id="BPMNShape_endevent2">
+        <omgdc:Bounds height="35.0" width="35.0" x="815.0" y="391.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="subprocess1" id="BPMNShape_subprocess1">
+        <omgdc:Bounds height="291.0" width="864.0" x="260.0" y="30.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="servicetask1" id="BPMNShape_servicetask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="340.0" y="70.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="mailtask2" id="BPMNShape_mailtask2">
+        <omgdc:Bounds height="75.0" width="105.0" x="560.0" y="50.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="startevent2" id="BPMNShape_startevent2">
+        <omgdc:Bounds height="35.0" width="35.0" x="300.0" y="180.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent3" id="BPMNShape_endevent3">
+        <omgdc:Bounds height="35.0" width="35.0" x="1070.0" y="156.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="servicetask2" id="BPMNShape_servicetask2">
+        <omgdc:Bounds height="55.0" width="105.0" x="900.0" y="80.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="servicetask3" id="BPMNShape_servicetask3">
+        <omgdc:Bounds height="55.0" width="105.0" x="720.0" y="124.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="textannotation3" id="BPMNShape_textannotation3">
+        <omgdc:Bounds height="101.0" width="141.0" x="370.0" y="190.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="textannotation4" id="BPMNShape_textannotation4">
+        <omgdc:Bounds height="90.0" width="131.0" x="550.0" y="180.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="textannotation5" id="BPMNShape_textannotation5">
+        <omgdc:Bounds height="72.0" width="121.0" x="750.0" y="229.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="textannotation6" id="BPMNShape_textannotation6">
+        <omgdc:Bounds height="81.0" width="131.0" x="960.0" y="220.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="servicetask5" id="BPMNShape_servicetask5">
+        <omgdc:Bounds height="55.0" width="105.0" x="440.0" y="396.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="parallelgateway1" id="BPMNShape_parallelgateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="649.0" y="390.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="parallelgateway2" id="BPMNShape_parallelgateway2">
+        <omgdc:Bounds height="40.0" width="40.0" x="200.0" y="390.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="textannotation1" id="BPMNShape_textannotation1">
+        <omgdc:Bounds height="71.0" width="100.0" x="60.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="textannotation2" id="BPMNShape_textannotation2">
+        <omgdc:Bounds height="81.0" width="122.0" x="589.0" y="460.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow14" id="BPMNEdge_flow14">
+        <omgdi:waypoint x="317.0" y="180.0"></omgdi:waypoint>
+        <omgdi:waypoint x="392.0" y="125.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow20" id="BPMNEdge_flow20">
+        <omgdi:waypoint x="445.0" y="97.0"></omgdi:waypoint>
+        <omgdi:waypoint x="560.0" y="87.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow22" id="BPMNEdge_flow22">
+        <omgdi:waypoint x="665.0" y="87.0"></omgdi:waypoint>
+        <omgdi:waypoint x="772.0" y="124.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow24" id="BPMNEdge_flow24">
+        <omgdi:waypoint x="825.0" y="151.0"></omgdi:waypoint>
+        <omgdi:waypoint x="952.0" y="135.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow25" id="BPMNEdge_flow25">
+        <omgdi:waypoint x="952.0" y="135.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1087.0" y="156.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="association3" id="BPMNEdge_association3">
+        <omgdi:waypoint x="1025.0" y="220.0"></omgdi:waypoint>
+        <omgdi:waypoint x="952.0" y="135.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="association4" id="BPMNEdge_association4">
+        <omgdi:waypoint x="810.0" y="229.0"></omgdi:waypoint>
+        <omgdi:waypoint x="772.0" y="179.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="association5" id="BPMNEdge_association5">
+        <omgdi:waypoint x="615.0" y="180.0"></omgdi:waypoint>
+        <omgdi:waypoint x="612.0" y="125.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="association6" id="BPMNEdge_association6">
+        <omgdi:waypoint x="440.0" y="190.0"></omgdi:waypoint>
+        <omgdi:waypoint x="392.0" y="125.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow11" id="BPMNEdge_flow11">
+        <omgdi:waypoint x="77.0" y="335.0"></omgdi:waypoint>
+        <omgdi:waypoint x="220.0" y="390.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow12" id="BPMNEdge_flow12">
+        <omgdi:waypoint x="692.0" y="321.0"></omgdi:waypoint>
+        <omgdi:waypoint x="669.0" y="390.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow26" id="BPMNEdge_flow26">
+        <omgdi:waypoint x="545.0" y="423.0"></omgdi:waypoint>
+        <omgdi:waypoint x="649.0" y="410.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow27" id="BPMNEdge_flow27">
+        <omgdi:waypoint x="689.0" y="410.0"></omgdi:waypoint>
+        <omgdi:waypoint x="815.0" y="408.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow28" id="BPMNEdge_flow28">
+        <omgdi:waypoint x="220.0" y="390.0"></omgdi:waypoint>
+        <omgdi:waypoint x="220.0" y="175.0"></omgdi:waypoint>
+        <omgdi:waypoint x="260.0" y="175.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow29" id="BPMNEdge_flow29">
+        <omgdi:waypoint x="240.0" y="410.0"></omgdi:waypoint>
+        <omgdi:waypoint x="440.0" y="423.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="association1" id="BPMNEdge_association1">
+        <omgdi:waypoint x="110.0" y="221.0"></omgdi:waypoint>
+        <omgdi:waypoint x="77.0" y="300.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="association2" id="BPMNEdge_association2">
+        <omgdi:waypoint x="589.0" y="500.0"></omgdi:waypoint>
+        <omgdi:waypoint x="492.0" y="451.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
