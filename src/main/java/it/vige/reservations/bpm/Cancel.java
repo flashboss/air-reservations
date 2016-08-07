@@ -21,7 +21,7 @@ import org.activiti.engine.delegate.JavaDelegate;
 import it.vige.reservations.model.Ticket;
 
 /**
- * Cancel a ticket. Th eoperation can be done by the traveller or by the staff
+ * Cancel a ticket. Th eoperation can be done by the traveler or by the staff
  * 
  * @author lucastancapiano
  *

@@ -20,7 +20,7 @@ package it.vige.reservations;
  *
  */
 import static it.vige.reservations.Constants.STAFF;
-import static it.vige.reservations.Constants.TRAVELLER;
+import static it.vige.reservations.Constants.TRAVELER;
 import static it.vige.reservations.State.STARTED;
 import static java.util.Arrays.asList;
 import static java.util.Calendar.HOUR_OF_DAY;
@@ -101,7 +101,7 @@ public class DemoData {
 	 *            Image availbale in the profile view of the user
 	 * @param groups
 	 *            groups of the users. The user can be an admin, staff or
-	 *            traveller
+	 *            traveler
 	 * @param userInfo
 	 *            Other custom properties for the user
 	 */
@@ -153,7 +153,7 @@ public class DemoData {
 	 * @param groupId
 	 *            Id of the group
 	 * @param type
-	 *            Type of the group. It can be assignment for travellers and
+	 *            Type of the group. It can be assignment for travelers and
 	 *            staff or security role for admin and user
 	 */
 	public void createGroup(IdentityService identityService, String groupId, String type) {
@@ -173,12 +173,12 @@ public class DemoData {
 	 */
 	public void initDemoUsers(IdentityService identityService) {
 		createUser(identityService, "kermit", "Kermit", "The Frog", "kermit", "kermit@activiti.org",
-				"org/activiti/explorer/images/kermit.jpg", Arrays.asList(STAFF, TRAVELLER, "user", "admin"),
+				"org/activiti/explorer/images/kermit.jpg", Arrays.asList(STAFF, TRAVELER, "user", "admin"),
 				Arrays.asList("birthDate", "10-10-1955", "jobTitle", "Muppet", "location", "Hollywoord", "phone",
 						"+123456789", "twitterName", "alfresco", "skype", "activiti_kermit_frog"));
 
 		createUser(identityService, "gonzo", "Gonzo", "The Great", "gonzo", "gonzo@activiti.org",
-				"org/activiti/explorer/images/gonzo.jpg", Arrays.asList(TRAVELLER, "user"),
+				"org/activiti/explorer/images/gonzo.jpg", Arrays.asList(TRAVELER, "user"),
 				asList("email", "frodobaggins@vige.it"));
 		createUser(identityService, "fozzie", "Fozzie", "Bear", "fozzie", "fozzie@activiti.org",
 				"org/activiti/explorer/images/fozzie.jpg", Arrays.asList(STAFF, "user"),
@@ -192,7 +192,7 @@ public class DemoData {
 	 *            The service to create the groups
 	 */
 	public void initDemoGroups(IdentityService identityService) {
-		String[] assignmentGroups = new String[] { STAFF, TRAVELLER };
+		String[] assignmentGroups = new String[] { STAFF, TRAVELER };
 		for (String groupId : assignmentGroups) {
 			createGroup(identityService, groupId, "assignment");
 		}

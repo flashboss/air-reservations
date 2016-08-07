@@ -20,9 +20,9 @@ To navigate in the webapp:
 - Open the browser and go to: http://localhost:8080
 - Login. Are available three accounts:
 
-       gonzo/gonzo - Is the user of the traveller searching new travels
+       gonzo/gonzo - Is the user of the traveler searching new travels
        
-       fozzie/fozzie - The user of the staff operator that can monitor the operations of the travellers
+       fozzie/fozzie - The user of the staff operator that can monitor the operations of the travelers
        
        kermit/kermit - The administrator. To use only for system problems 
      
@@ -32,7 +32,7 @@ To start only the unit test cases digit:
        
   Three test cases are availables:
   
-  - ReservationsTest: to test the choice of the flight, the checkouts, the refunds for travellers and staff
+  - ReservationsTest: to test the choice of the flight, the checkouts, the refunds for travelers and staff
   
   - SchedulerTest: to test the operations started by the scheduler
   

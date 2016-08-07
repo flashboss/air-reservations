@@ -41,7 +41,7 @@ import junit.framework.TestCase;
  */
 public class PDFTest extends TestCase {
 
-	private final static String TRAVELLER_USER_NAME = "gonzo";
+	private final static String TRAVELER_USER_NAME = "gonzo";
 
 	private static final Logger LOGGER = getLogger(PDFTest.class.getName());
 
@@ -51,7 +51,7 @@ public class PDFTest extends TestCase {
 	@Test
 	public void testGenerate() {
 		List<Ticket> tickets = new ArrayList<Ticket>();
-		new DemoData().getFlights(null).forEach(flight -> tickets.add(new Ticket(flight, TRAVELLER_USER_NAME)));
+		new DemoData().getFlights(null).forEach(flight -> tickets.add(new Ticket(flight, TRAVELER_USER_NAME)));
 		PDFGenerator generator = new PDFGenerator(tickets);
 		InputStream inputStream = generator.generateTickets();
 		readTickets(inputStream);

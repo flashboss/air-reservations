@@ -21,7 +21,7 @@ import it.vige.reservations.PDFGenerator;
 import it.vige.reservations.model.Ticket;
 
 /**
- * Creates the boarding pass for the traveller
+ * Creates the boarding pass for the traveler
  * 
  * @author lucastancapiano
  *

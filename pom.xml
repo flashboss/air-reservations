@@ -23,7 +23,7 @@ The application manages the notifications through email and pdf attachments</des
 	<scm>
 		<connection>svn:git:https://github.com/flashboss/air-reservations.git</connection>
 		<developerConnection>svn:git:https://github.com/flashboss/air-reservations.git</developerConnection>
-		<tag>0.0.1-SNAPSHOT</tag>
+		<tag>0.0.X-SNAPSHOT</tag>
 		<url>svn:git:https://github.com/flashboss/air-reservations.git</url>
 	</scm>
 	<developers>

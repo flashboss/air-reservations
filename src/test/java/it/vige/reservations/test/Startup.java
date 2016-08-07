@@ -32,9 +32,9 @@ public class Startup extends ResourceActivitiTestCase {
 	 */
 	protected final static String ADMIN_USER_NAME = "kermit";
 	/**
-	 * Default traveller user to work with the reservations
+	 * Default traveler user to work with the reservations
 	 */
-	protected final static String TRAVELLER_USER_NAME = "gonzo";
+	protected final static String TRAVELER_USER_NAME = "gonzo";
 
 	/**
 	 * Used to work with the mail server and user operations

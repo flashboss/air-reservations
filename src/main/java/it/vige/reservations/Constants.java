@@ -22,12 +22,12 @@ package it.vige.reservations;
 public interface Constants {
 	/**
 	 * The group id for the staff. The staff manage the tickets of the
-	 * travellers
+	 * travelers
 	 */
 	String STAFF = "staff";
 	/**
-	 * The group id of the travellers. The travellers do the reservations,
+	 * The group id of the travelers. The travelers do the reservations,
 	 * checkout and refund requests
 	 */
-	String TRAVELLER = "traveller";
+	String TRAVELER = "traveler";
 }

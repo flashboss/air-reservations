@@ -13,7 +13,7 @@
  ******************************************************************************/
 package org.activiti.explorer.ui.login;
 
-import static it.vige.reservations.Constants.TRAVELLER;
+import static it.vige.reservations.Constants.TRAVELER;
 import static org.activiti.engine.ProcessEngines.getDefaultProcessEngine;
 import static org.activiti.explorer.ExplorerApp.get;
 import static org.activiti.explorer.Messages.LOGIN_FAILED_HEADER;
@@ -123,7 +123,7 @@ public class LoginPage extends CustomLayout {
 				LoggedInUser loggedInUser = loginHandler.authenticate(userName, password);
 				if (loggedInUser != null) {
 					get().setUser(loggedInUser);
-					if (loggedInUser.getGroups().stream().filter(group -> group.getId().equals(TRAVELLER))
+					if (loggedInUser.getGroups().stream().filter(group -> group.getId().equals(TRAVELER))
 							.count() > 0) {
 						identityService.setAuthenticatedUserId(userName);
 						getDefaultProcessEngine().getRuntimeService().startProcessInstanceByKey("reservations");

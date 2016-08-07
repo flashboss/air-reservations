@@ -52,7 +52,7 @@ public class SchedulerTest extends Startup {
 
 		// AUTHENTICATION
 		// Always reset authenticated user to avoid any mistakes
-		identityService.setAuthenticatedUserId(TRAVELLER_USER_NAME);
+		identityService.setAuthenticatedUserId(TRAVELER_USER_NAME);
 
 		// STARTING RESERVATIONS PROCESS. I NEED TO GET TICKETS IN THE DB
 		ReservationsTest.execute(runtimeService, taskService, historyService);
@@ -107,7 +107,7 @@ public class SchedulerTest extends Startup {
 
 		// AUTHENTICATION
 		// Always reset authenticated user to avoid any mistakes
-		identityService.setAuthenticatedUserId(TRAVELLER_USER_NAME);
+		identityService.setAuthenticatedUserId(TRAVELER_USER_NAME);
 
 		// STARTING RESERVATIONS PROCESS. I NEED TO GET TICKETS IN THE DB
 		ReservationsTest.execute(runtimeService, taskService, historyService);
@@ -162,7 +162,7 @@ public class SchedulerTest extends Startup {
 
 		// AUTHENTICATION
 		// Always reset authenticated user to avoid any mistakes
-		identityService.setAuthenticatedUserId(TRAVELLER_USER_NAME);
+		identityService.setAuthenticatedUserId(TRAVELER_USER_NAME);
 
 		// STARTING RESERVATIONS PROCESS. I NEED TO GET TICKETS IN THE DB
 		ReservationsTest.execute(runtimeService, taskService, historyService);

@@ -7,7 +7,7 @@
       </extensionElements>
     </startEvent>
     <endEvent id="endevent1" name="End"></endEvent>
-    <userTask id="usertask1" name="Search Flight" activiti:assignee="#{currentUser}" activiti:candidateGroups="traveller">
+    <userTask id="usertask1" name="Search Flight" activiti:assignee="#{currentUser}" activiti:candidateGroups="traveler">
       <extensionElements>
         <activiti:formProperty id="dateFrom" name="Date from" type="date" variable="dateFrom"></activiti:formProperty>
         <activiti:formProperty id="addressFrom" name="Address From" type="string" variable="addressFrom"></activiti:formProperty>
@@ -18,7 +18,7 @@
     </userTask>
     <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="usertask1"></sequenceFlow>
     <sequenceFlow id="flow2" sourceRef="usertask1" targetRef="usertask2"></sequenceFlow>
-    <userTask id="usertask2" name="#{flight.toString()}" activiti:candidateGroups="traveller">
+    <userTask id="usertask2" name="#{flight.toString()}" activiti:candidateGroups="traveler">
       <extensionElements>
         <activiti:formProperty id="from" name="From" type="string" expression="#{flight.addressFrom.toString()}" writable="false"></activiti:formProperty>
         <activiti:formProperty id="to" name="To" type="string" expression="#{flight.addressTo.toString()}" writable="false"></activiti:formProperty>
@@ -31,7 +31,7 @@
         <completionCondition>${nrOfCompletedInstances &gt; 0}</completionCondition>
       </multiInstanceLoopCharacteristics>
     </userTask>
-    <userTask id="usertask3" name="Pay" activiti:assignee="#{currentUser}" activiti:candidateGroups="traveller">
+    <userTask id="usertask3" name="Pay" activiti:assignee="#{currentUser}" activiti:candidateGroups="traveler">
       <extensionElements>
         <activiti:formProperty id="flightstopay" name="Flights" type="string" expression="#{payment.flights.toString()}" writable="false"></activiti:formProperty>
         <activiti:formProperty id="creditcard" name="Credit Card" type="string" expression="#{payment.creditCard}" required="true"></activiti:formProperty>
@@ -66,7 +66,7 @@ Have a nice day]]></activiti:string>
     <subProcess id="subprocess1" name="Sub Process">
       <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="tickets" activiti:elementVariable="ticket"></multiInstanceLoopCharacteristics>
       <startEvent id="startevent2" name="Start"></startEvent>
-      <userTask id="usertask4" name="#{ticket.flight.toString()}" activiti:assignee="#{currentUser}" activiti:candidateGroups="traveller">
+      <userTask id="usertask4" name="#{ticket.flight.toString()}" activiti:assignee="#{currentUser}" activiti:candidateGroups="traveler">
         <extensionElements>
           <activiti:formProperty id="id" name="Id" type="string" expression="#{ticket.id}" writable="false"></activiti:formProperty>
           <activiti:formProperty id="from" name="From" type="string" expression="#{ticket.flight.addressFrom.toString()}" writable="false"></activiti:formProperty>
@@ -109,7 +109,7 @@ Have a nice day]]></activiti:string>
       <sequenceFlow id="flow16" sourceRef="callactivity1" targetRef="exclusivegateway4"></sequenceFlow>
       <sequenceFlow id="flow17" sourceRef="callactivity2" targetRef="exclusivegateway4"></sequenceFlow>
       <textAnnotation id="textannotation6">
-        <text>Here the traveller can see his ticket with the info of the flight</text>
+        <text>Here the traveler can see his ticket with the info of the flight</text>
       </textAnnotation>
       <association id="association6" sourceRef="textannotation6" targetRef="usertask4"></association>
       <textAnnotation id="textannotation7">
@@ -141,7 +141,7 @@ Have a nice day]]></activiti:string>
     </textAnnotation>
     <association id="association4" sourceRef="textannotation4" targetRef="mailtask1"></association>
     <textAnnotation id="textannotation5">
-      <text>After the payment, the traveller can see the tickets and decide if do the checkout or the request of refund</text>
+      <text>After the payment, the traveler can see the tickets and decide if do the checkout or the request of refund</text>
     </textAnnotation>
     <association id="association5" sourceRef="textannotation5" targetRef="subprocess1"></association>
   </process>

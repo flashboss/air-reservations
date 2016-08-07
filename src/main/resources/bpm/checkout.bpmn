@@ -8,7 +8,7 @@
     </startEvent>
     <endEvent id="endevent1" name="End"></endEvent>
     <sequenceFlow id="flow3" sourceRef="inclusivegateway2" targetRef="endevent1"></sequenceFlow>
-    <userTask id="usertask5" name="Choose Seat" activiti:assignee="#{currentUser}" activiti:candidateGroups="traveller">
+    <userTask id="usertask5" name="Choose Seat" activiti:assignee="#{currentUser}" activiti:candidateGroups="traveler">
       <extensionElements>
         <activiti:formProperty id="from" name="From" type="string" expression="#{ticket.flight.addressFrom.toString()}" writable="false"></activiti:formProperty>
         <activiti:formProperty id="to" name="To" type="string" expression="#{ticket.flight.addressTo.toString()}" writable="false"></activiti:formProperty>
@@ -27,7 +27,7 @@
     <sequenceFlow id="flow13" sourceRef="inclusivegateway1" targetRef="usertask5">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{ticket.flight.state != "CHECKOUT"}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="usertask6" name="ID: #{ticket.id}" activiti:assignee="#{currentUser}" activiti:candidateGroups="traveller" activiti:dueDate="#{ticket.flight.arriveTime}">
+    <userTask id="usertask6" name="ID: #{ticket.id}" activiti:assignee="#{currentUser}" activiti:candidateGroups="traveler" activiti:dueDate="#{ticket.flight.arriveTime}">
       <extensionElements>
         <activiti:formProperty id="from" name="From" type="string" expression="#{ticket.flight.addressFrom.toString()}" writable="false"></activiti:formProperty>
         <activiti:formProperty id="to" name="To" type="string" expression="#{ticket.flight.addressTo.toString()}" writable="false"></activiti:formProperty>
@@ -55,13 +55,13 @@
     <sequenceFlow id="flow15" sourceRef="usertask7" targetRef="inclusivegateway2"></sequenceFlow>
     <sequenceFlow id="flow16" sourceRef="usertask6" targetRef="inclusivegateway2"></sequenceFlow>
     <textAnnotation id="textannotation1">
-      <text>The traveller see the available seats, choose the seat of the flight and in the end the checkout is done</text>
+      <text>The traveler see the available seats, choose the seat of the flight and in the end the checkout is done</text>
     </textAnnotation>
     <textAnnotation id="textannotation2">
-      <text>The traveller see the ticket with the choose seat</text>
+      <text>The traveler see the ticket with the choose seat</text>
     </textAnnotation>
     <textAnnotation id="textannotation3">
-      <text>The staff see the ticket in checkout state done by the traveller</text>
+      <text>The staff see the ticket in checkout state done by the traveler</text>
     </textAnnotation>
     <association id="association1" sourceRef="usertask5" targetRef="textannotation1"></association>
     <association id="association2" sourceRef="textannotation3" targetRef="usertask7"></association>

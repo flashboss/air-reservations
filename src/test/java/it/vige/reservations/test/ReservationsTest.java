@@ -57,7 +57,7 @@ public class ReservationsTest extends Startup {
 
 		// AUTHENTICATION
 		// Always reset authenticated user to avoid any mistakes
-		identityService.setAuthenticatedUserId(TRAVELLER_USER_NAME);
+		identityService.setAuthenticatedUserId(TRAVELER_USER_NAME);
 
 		// EXECUTE TEST
 		execute(runtimeService, taskService, historyService);
@@ -199,13 +199,13 @@ public class ReservationsTest extends Startup {
 				.includeProcessVariables().list();
 		assertEquals(15, chooseFlights.size());
 		String id = chooseFlights.get(2).getId();
-		taskService.claim(id, TRAVELLER_USER_NAME);
+		taskService.claim(id, TRAVELER_USER_NAME);
 		id = chooseFlights.get(5).getId();
-		taskService.claim(id, TRAVELLER_USER_NAME);
+		taskService.claim(id, TRAVELER_USER_NAME);
 		id = chooseFlights.get(8).getId();
-		taskService.claim(id, TRAVELLER_USER_NAME);
+		taskService.claim(id, TRAVELER_USER_NAME);
 		id = chooseFlights.get(9).getId();
-		taskService.claim(id, TRAVELLER_USER_NAME);
+		taskService.claim(id, TRAVELER_USER_NAME);
 		taskService.complete(id, variables);
 
 		// PAYMENT
