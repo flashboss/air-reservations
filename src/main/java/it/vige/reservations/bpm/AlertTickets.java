@@ -31,7 +31,7 @@ import it.vige.reservations.model.Ticket;
 public class AlertTickets implements JavaDelegate {
 
 	@Override
-	public void execute(DelegateExecution execution) throws Exception {
+	public void execute(DelegateExecution execution) {
 		@SuppressWarnings("unchecked")
 		List<Ticket> tickets = (List<Ticket>) execution.getVariable("ticketsToAlert");
 		tickets.forEach(ticket -> ticket.getFlight().setState(ALERTED));

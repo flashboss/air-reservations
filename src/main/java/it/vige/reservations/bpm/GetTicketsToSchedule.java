@@ -17,11 +17,16 @@ import static it.vige.reservations.DemoData.differenceBetween;
 import static it.vige.reservations.State.REQUESTED;
 import static java.net.InetAddress.getByName;
 import static java.util.concurrent.TimeUnit.HOURS;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Logger.getLogger;
 import static java.util.stream.Collectors.toList;
+import static org.activiti.engine.impl.context.Context.getProcessEngineConfiguration;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.DelegateExecution;
@@ -42,16 +47,22 @@ public class GetTicketsToSchedule implements JavaDelegate {
 	private final static int MAX_HOURS_TO_ALERT = 48;
 	private final static int MAX_HOURS_TO_CANCEL = 4;
 
-	@Override
-	public void execute(DelegateExecution execution) throws Exception {
+	private static final Logger LOGGER = getLogger(GetTicketsToSchedule.class.getName());
 
-		TaskService taskService = execution.getEngineServices().getTaskService();
+	@Override
+	public void execute(DelegateExecution execution) {
+
+		TaskService taskService = getProcessEngineConfiguration().getTaskService();
 		List<Task> tasks = taskService.createTaskQuery().includeProcessVariables().includeTaskLocalVariables()
 				.taskDefinitionKey("usertask4").active().list();
-		execution.createVariableLocal("ticketsToAlert", new ArrayList<Ticket>());
-		execution.createVariableLocal("ticketsToCancel", new ArrayList<Ticket>());
+		execution.setVariableLocal("ticketsToAlert", new ArrayList<Ticket>());
+		execution.setVariableLocal("ticketsToCancel", new ArrayList<Ticket>());
 		if (tasks.size() > 0) {
-			execution.createVariableLocal("hostName", getByName("localhost"));
+			try {
+				execution.setVariableLocal("hostName", getByName("localhost"));
+			} catch (UnknownHostException e) {
+				LOGGER.log(SEVERE, e.getMessage());
+			}
 			@SuppressWarnings("unchecked")
 			List<Ticket> tickets = (List<Ticket>) tasks.get(0).getProcessVariables().get("tickets");
 			Date today = new Date();
@@ -63,9 +74,9 @@ public class GetTicketsToSchedule implements JavaDelegate {
 			}).collect(toList());
 			execution.setVariableLocal("ticketsToAlert", ticketsToAlert);
 
-			List<Ticket> ticketsToCancel = tickets.stream()
-					.filter(ticket -> differenceBetween(ticket.getFlight().getStartTime(), today,
-							HOURS) <= MAX_HOURS_TO_CANCEL && ticket.getFlight().getState() == REQUESTED)
+			List<Ticket> ticketsToCancel = tickets.stream().filter(
+					ticket -> differenceBetween(ticket.getFlight().getStartTime(), today, HOURS) <= MAX_HOURS_TO_CANCEL
+							&& ticket.getFlight().getState() == REQUESTED)
 					.collect(toList());
 			execution.setVariableLocal("ticketsToCancel", ticketsToCancel);
 		}

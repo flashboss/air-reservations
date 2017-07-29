@@ -28,7 +28,7 @@ import it.vige.reservations.model.Ticket;
 public class GetSeats implements JavaDelegate {
 
 	@Override
-	public void execute(DelegateExecution execution) throws Exception {
+	public void execute(DelegateExecution execution) {
 		Ticket ticket = (Ticket) execution.getVariable("ticket");
 		String seats = new DemoData().getSeats(ticket.getFlight()) + "";
 		execution.setVariable("seats", seats);

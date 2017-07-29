@@ -14,6 +14,7 @@
 package it.vige.reservations.bpm;
 
 import static it.vige.reservations.State.CANCELED;
+import static org.activiti.engine.impl.context.Context.getProcessEngineConfiguration;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +28,8 @@ import org.activiti.engine.task.Task;
 import it.vige.reservations.model.Ticket;
 
 /**
- * Cancel all requested tickets notified by the scheduler. Theese ticket are expired
+ * Cancel all requested tickets notified by the scheduler. Theese ticket are
+ * expired
  * 
  * @author lucastancapiano
  *
@@ -35,12 +37,12 @@ import it.vige.reservations.model.Ticket;
 public class CancelTickets implements JavaDelegate {
 
 	@Override
-	public void execute(DelegateExecution execution) throws Exception {
+	public void execute(DelegateExecution execution) {
 		@SuppressWarnings("unchecked")
 		List<Ticket> tickets = (List<Ticket>) execution.getVariable("ticketsToCancel");
 		tickets.forEach(ticket -> ticket.getFlight().setState(CANCELED));
 		execution.setVariable("ticketsToCancel", tickets);
-		TaskService taskService = execution.getEngineServices().getTaskService();
+		TaskService taskService = getProcessEngineConfiguration().getTaskService();
 		List<Task> tasks = taskService.createTaskQuery().includeProcessVariables().includeTaskLocalVariables()
 				.taskDefinitionKey("usertask4").list();
 		for (Task task : tasks) {

@@ -58,11 +58,11 @@ public class SetPayment implements TaskListener {
 			byte[] bytes = new byte[pdf.available()];
 			pdf.read(bytes);
 			outputStream.write(bytes);
-			delegateTask.getExecution().createVariableLocal("file_path", filePath);
+			delegateTask.getExecution().setVariableLocal("file_path", filePath);
 		} catch (IOException e) {
 			LOGGER.log(SEVERE, e.getMessage());
 		}
-		delegateTask.getExecution().createVariableLocal("tickets", tickets);
+		delegateTask.getExecution().setVariableLocal("tickets", tickets);
 	}
 
 }

@@ -13,6 +13,8 @@
  ******************************************************************************/
 package it.vige.reservations.bpm;
 
+import static org.activiti.engine.impl.context.Context.getProcessEngineConfiguration;
+
 import java.util.ArrayList;
 
 import org.activiti.engine.delegate.DelegateExecution;
@@ -31,12 +33,12 @@ public class SetFlights implements ExecutionListener {
 	private static final long serialVersionUID = 1247129334241810480L;
 
 	@Override
-	public void notify(DelegateExecution execution) throws Exception {
-		execution.createVariableLocal("flights", new ArrayList<Flight>());
-		execution.createVariableLocal("choosenFlights", new ArrayList<Flight>());
+	public void notify(DelegateExecution execution) {
+		execution.setVariableLocal("flights", new ArrayList<Flight>());
+		execution.setVariableLocal("choosenFlights", new ArrayList<Flight>());
 		String currentUser = (String) execution.getVariable("currentUser");
-		String email = execution.getEngineServices().getIdentityService().getUserInfo(currentUser, "email");
-		execution.createVariableLocal("email", email);
+		String email = getProcessEngineConfiguration().getIdentityService().getUserInfo(currentUser, "email");
+		execution.setVariableLocal("email", email);
 	}
 
 }

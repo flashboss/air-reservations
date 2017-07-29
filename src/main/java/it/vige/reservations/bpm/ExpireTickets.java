@@ -13,6 +13,8 @@
  ******************************************************************************/
 package it.vige.reservations.bpm;
 
+import static org.activiti.engine.impl.context.Context.getProcessEngineConfiguration;
+
 import java.util.Date;
 import java.util.List;
 
@@ -32,8 +34,8 @@ import org.activiti.engine.task.TaskQuery;
 public class ExpireTickets implements JavaDelegate {
 
 	@Override
-	public void execute(DelegateExecution execution) throws Exception {
-		TaskService taskService = execution.getEngineServices().getTaskService();
+	public void execute(DelegateExecution execution) {
+		TaskService taskService = getProcessEngineConfiguration().getTaskService();
 		TaskQuery taskQuery = taskService.createTaskQuery().includeProcessVariables().includeTaskLocalVariables();
 		List<Task> tasks = taskQuery.taskDefinitionKey("usertask6").list();
 		List<Task> staffTasks = taskQuery.taskDefinitionKey("usertask7").list();
