@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.vige.reservations</groupId>
 	<artifactId>air-reservations</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>war</packaging>
 	<description>It is a booking application to reserve flights. 
 A logged user can search the flights, pay, receive the tickets, cancel the reservation, choose the seat of the flight, checkout the flight and print the boarding pass. 
@@ -23,7 +23,7 @@ The application manages the notifications through email and pdf attachments</des
 	<scm>
 		<connection>svn:git:https://github.com/flashboss/air-reservations.git</connection>
 		<developerConnection>svn:git:https://github.com/flashboss/air-reservations.git</developerConnection>
-		<tag>1.0.X-SNAPSHOT</tag>
+		<tag>1.0.0</tag>
 		<url>svn:git:https://github.com/flashboss/air-reservations.git</url>
 	</scm>
 	<developers>
