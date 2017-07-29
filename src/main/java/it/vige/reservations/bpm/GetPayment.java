@@ -13,6 +13,9 @@
  ******************************************************************************/
 package it.vige.reservations.bpm;
 
+import static it.vige.reservations.Constants.CHOOSEN_FLIGHTS;
+import static it.vige.reservations.Constants.PAYMENT;
+
 import java.util.List;
 
 import org.activiti.engine.delegate.DelegateTask;
@@ -34,9 +37,9 @@ public class GetPayment implements TaskListener {
 	@Override
 	public void notify(DelegateTask delegateTask) {
 		@SuppressWarnings("unchecked")
-		List<Flight> flights = (List<Flight>) delegateTask.getVariable("choosenFlights");
+		List<Flight> flights = (List<Flight>) delegateTask.getVariable(CHOOSEN_FLIGHTS);
 		Payment payment = new Payment(flights);
-		delegateTask.getExecution().setVariableLocal("payment", payment);
+		delegateTask.getExecution().setVariableLocal(PAYMENT, payment);
 	}
 
 }

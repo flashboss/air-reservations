@@ -13,7 +13,10 @@
  ******************************************************************************/
 package org.activiti.explorer.ui.login;
 
+import static it.vige.reservations.Constants.PASSWORD;
+import static it.vige.reservations.Constants.RESERVATIONS;
 import static it.vige.reservations.Constants.TRAVELER;
+import static it.vige.reservations.Constants.USERNAME;
 import static org.activiti.engine.ProcessEngines.getDefaultProcessEngine;
 import static org.activiti.explorer.ExplorerApp.get;
 import static org.activiti.explorer.Messages.LOGIN_FAILED_HEADER;
@@ -105,14 +108,14 @@ public class LoginPage extends CustomLayout {
 
 		public void onLogin(LoginEvent event) {
 			try {
-				String userName = event.getLoginParameter("username"); // see
+				String userName = event.getLoginParameter(USERNAME); // see
 																		// the
 																		// input
 																		// field
 																		// names
 																		// in
 																		// CustomLoginForm
-				String password = event.getLoginParameter("password"); // see
+				String password = event.getLoginParameter(PASSWORD); // see
 																		// the
 																		// input
 																		// field
@@ -123,10 +126,9 @@ public class LoginPage extends CustomLayout {
 				LoggedInUser loggedInUser = loginHandler.authenticate(userName, password);
 				if (loggedInUser != null) {
 					get().setUser(loggedInUser);
-					if (loggedInUser.getGroups().stream().filter(group -> group.getId().equals(TRAVELER))
-							.count() > 0) {
+					if (loggedInUser.getGroups().stream().filter(group -> group.getId().equals(TRAVELER)).count() > 0) {
 						identityService.setAuthenticatedUserId(userName);
-						getDefaultProcessEngine().getRuntimeService().startProcessInstanceByKey("reservations");
+						getDefaultProcessEngine().getRuntimeService().startProcessInstanceByKey(RESERVATIONS);
 						viewManager.showDefaultPage();
 					}
 				} else {

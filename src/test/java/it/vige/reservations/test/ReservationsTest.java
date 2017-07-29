@@ -13,6 +13,26 @@
  ******************************************************************************/
 package it.vige.reservations.test;
 
+import static it.vige.reservations.Constants.ADDRESS_FROM;
+import static it.vige.reservations.Constants.ADDRESS_TO;
+import static it.vige.reservations.Constants.DATE_FROM;
+import static it.vige.reservations.Constants.MAILTASK1;
+import static it.vige.reservations.Constants.OPERATION;
+import static it.vige.reservations.Constants.PAYMENT;
+import static it.vige.reservations.Constants.PRIZE;
+import static it.vige.reservations.Constants.RESERVATIONS;
+import static it.vige.reservations.Constants.SEAT;
+import static it.vige.reservations.Constants.SEATS;
+import static it.vige.reservations.Constants.TICKET;
+import static it.vige.reservations.Constants.TICKETS;
+import static it.vige.reservations.Constants.USERTASK1;
+import static it.vige.reservations.Constants.USERTASK2;
+import static it.vige.reservations.Constants.USERTASK3;
+import static it.vige.reservations.Constants.USERTASK4;
+import static it.vige.reservations.Constants.USERTASK5;
+import static it.vige.reservations.Constants.USERTASK6;
+import static it.vige.reservations.Constants.USERTASK7;
+import static it.vige.reservations.Constants.USERTASK8;
 import static it.vige.reservations.DemoData.getDate;
 import static it.vige.reservations.State.CANCELED;
 import static it.vige.reservations.State.CHECKOUT;
@@ -63,23 +83,23 @@ public class ReservationsTest extends Startup {
 		execute(runtimeService, taskService, historyService);
 
 		// MY TICKETS
-		List<Task> myTickets = taskService.createTaskQuery().taskDefinitionKey("usertask4").includeProcessVariables()
+		List<Task> myTickets = taskService.createTaskQuery().taskDefinitionKey(USERTASK4).includeProcessVariables()
 				.list();
 		assertEquals(4, myTickets.size());
 		Task task = myTickets.get(0);
 		Map<String, Object> variables = new HashMap<String, Object>();
-		variables.put("operation", CHECKOUT.name());
+		variables.put(OPERATION, CHECKOUT.name());
 		taskService.complete(task.getId(), variables);
 		task = myTickets.get(1);
 		taskService.complete(task.getId(), variables);
 		task = myTickets.get(2);
-		variables.put("operation", CANCELED.name());
+		variables.put(OPERATION, CANCELED.name());
 		taskService.complete(task.getId(), variables);
 		task = myTickets.get(3);
 		taskService.complete(task.getId(), variables);
 
 		// CHOOSE THE SEATS
-		myTickets = taskService.createTaskQuery().taskDefinitionKey("usertask5").includeProcessVariables().list();
+		myTickets = taskService.createTaskQuery().taskDefinitionKey(USERTASK5).includeProcessVariables().list();
 		assertEquals(2, myTickets.size());
 		task = myTickets.get(0);
 		variables = new HashMap<String, Object>();
@@ -89,48 +109,48 @@ public class ReservationsTest extends Startup {
 
 		// TWO CHECKOUT PROCESS MUST BE STILL ACTIVE BECAUSE THE SEAT IS NOT
 		// CHOOSEN
-		myTickets = taskService.createTaskQuery().taskDefinitionKey("usertask5").includeProcessVariables().list();
+		myTickets = taskService.createTaskQuery().taskDefinitionKey(USERTASK5).includeProcessVariables().list();
 		assertEquals(2, myTickets.size());
 		task = myTickets.get(0);
 		variables = new HashMap<String, Object>();
-		variables.put("seat", 333333L);
+		variables.put(SEAT, 333333L);
 		taskService.complete(task.getId(), variables);
 		task = myTickets.get(1);
-		variables.put("seat", 333333L);
+		variables.put(SEAT, 333333L);
 		taskService.complete(task.getId(), variables);
 
 		// TWO CHECKOUT PROCESS MUST BE STILL ACTIVE BECAUSE A NOT EXISTING SEAT
 		// WAS CHOOSEN
-		myTickets = taskService.createTaskQuery().taskDefinitionKey("usertask5").includeProcessVariables().list();
+		myTickets = taskService.createTaskQuery().taskDefinitionKey(USERTASK5).includeProcessVariables().list();
 		assertEquals(2, myTickets.size());
 		task = myTickets.get(0);
 		variables = taskService.getVariables(task.getId());
-		List<String> seatStr = asList(((String) variables.get("seats")).split("\\[|,|\\]"));
+		List<String> seatStr = asList(((String) variables.get(SEATS)).split("\\[|,|\\]"));
 		seatStr = seatStr.subList(1, seatStr.size());
 		List<Long> seats = seatStr.stream().map(s -> new Long(s.trim())).collect(toList());
-		variables.put("seat", seats.get(4));
+		variables.put(SEAT, seats.get(4));
 		taskService.complete(task.getId(), variables);
 		task = myTickets.get(1);
 		variables = taskService.getVariables(task.getId());
-		seatStr = asList(((String) variables.get("seats")).split("\\[|,|\\]"));
+		seatStr = asList(((String) variables.get(SEATS)).split("\\[|,|\\]"));
 		seatStr = seatStr.subList(1, seatStr.size());
 		seats = seatStr.stream().map(s -> new Long(s.trim())).collect(toList());
-		variables.put("seat", seats.get(5));
+		variables.put(SEAT, seats.get(5));
 		taskService.complete(task.getId(), variables);
 
 		// THE TRAVELER RECEIVES THE BOARDING PASSES FOR THE TICKET IN CHECKOUT STATE
-		List<Task> myBoardingPasses = taskService.createTaskQuery().taskDefinitionKey("usertask6")
+		List<Task> myBoardingPasses = taskService.createTaskQuery().taskDefinitionKey(USERTASK6)
 				.includeProcessVariables().list();
 		assertEquals(2, myBoardingPasses.size());
 		task = myBoardingPasses.get(0);
-		Date dueDate = ((Ticket) task.getProcessVariables().get("ticket")).getFlight().getArriveTime();
+		Date dueDate = ((Ticket) task.getProcessVariables().get(TICKET)).getFlight().getArriveTime();
 		assertEquals(dueDate, task.getDueDate());
 		List<Attachment> attachments = taskService.getTaskAttachments(task.getId());
 		assertEquals(1, attachments.size());
 		assertEquals("Boarding Pass", attachments.get(0).getName());
 
 		task = myBoardingPasses.get(1);
-		dueDate = ((Ticket) task.getProcessVariables().get("ticket")).getFlight().getArriveTime();
+		dueDate = ((Ticket) task.getProcessVariables().get(TICKET)).getFlight().getArriveTime();
 		assertEquals(dueDate, task.getDueDate());
 		attachments = taskService.getTaskAttachments(task.getId());
 		assertEquals(1, attachments.size());
@@ -138,28 +158,28 @@ public class ReservationsTest extends Startup {
 		myBoardingPasses.forEach(t -> taskService.complete(t.getId()));
 
 		// THE STAFF RECEIVES THE NOTIFICATIONS FOR THE TICKET IN CHECKOUT STATE
-		List<Task> staffCheckoutTickets = taskService.createTaskQuery().taskDefinitionKey("usertask7").includeProcessVariables()
+		List<Task> staffCheckoutTickets = taskService.createTaskQuery().taskDefinitionKey(USERTASK7).includeProcessVariables()
 				.list();
 		assertEquals(2, staffCheckoutTickets.size());
 		task = staffCheckoutTickets.get(0);
-		dueDate = ((Ticket) task.getProcessVariables().get("ticket")).getFlight().getArriveTime();
+		dueDate = ((Ticket) task.getProcessVariables().get(TICKET)).getFlight().getArriveTime();
 		assertEquals(dueDate, task.getDueDate());
 
 		task = staffCheckoutTickets.get(1);
-		dueDate = ((Ticket) task.getProcessVariables().get("ticket")).getFlight().getArriveTime();
+		dueDate = ((Ticket) task.getProcessVariables().get(TICKET)).getFlight().getArriveTime();
 		assertEquals(dueDate, task.getDueDate());
 		staffCheckoutTickets.forEach(t -> taskService.complete(t.getId()));
 
 		// THE STAFF RECEIVES THE NOTIFICATIONS FOR THE TICKET IN CANCEL STATE
-		List<Task> staffCancelTickets = taskService.createTaskQuery().taskDefinitionKey("usertask8").includeProcessVariables()
+		List<Task> staffCancelTickets = taskService.createTaskQuery().taskDefinitionKey(USERTASK8).includeProcessVariables()
 				.list();
 		assertEquals(2, staffCancelTickets.size());
 		task = staffCancelTickets.get(0);
-		dueDate = ((Ticket) task.getProcessVariables().get("ticket")).getFlight().getArriveTime();
+		dueDate = ((Ticket) task.getProcessVariables().get(TICKET)).getFlight().getArriveTime();
 		assertEquals(dueDate, task.getDueDate());
 
 		task = staffCancelTickets.get(1);
-		dueDate = ((Ticket) task.getProcessVariables().get("ticket")).getFlight().getArriveTime();
+		dueDate = ((Ticket) task.getProcessVariables().get(TICKET)).getFlight().getArriveTime();
 		assertEquals(dueDate, task.getDueDate());
 		staffCancelTickets.forEach(t -> taskService.complete(t.getId()));
 
@@ -180,22 +200,22 @@ public class ReservationsTest extends Startup {
 	public static void execute(RuntimeService runtimeService, TaskService taskService, HistoryService historyService) {
 
 		// STARTING PROCESS
-		runtimeService.startProcessInstanceByKey("reservations");
+		runtimeService.startProcessInstanceByKey(RESERVATIONS);
 
 		// SEARCH FLIGHTS
-		List<Task> searchFlights = taskService.createTaskQuery().taskDefinitionKey("usertask1")
+		List<Task> searchFlights = taskService.createTaskQuery().taskDefinitionKey(USERTASK1)
 				.includeProcessVariables().list();
 		assertEquals(1, searchFlights.size());
 		Map<String, Object> variables = new HashMap<String, Object>();
-		variables.put("dateFrom", getDate(2016, 7, 3));
-		variables.put("addressForm", "Australy");
-		variables.put("addressTo", "London");
-		variables.put("prize", 122.99);
+		variables.put(DATE_FROM, getDate(2016, 7, 3));
+		variables.put(ADDRESS_FROM, "Australy");
+		variables.put(ADDRESS_TO, "London");
+		variables.put(PRIZE, 122.99);
 		Task firstTask = searchFlights.get(0);
 		taskService.complete(firstTask.getId(), variables);
 
 		// CHOOSE FLIGHTS
-		List<Task> chooseFlights = taskService.createTaskQuery().taskDefinitionKey("usertask2")
+		List<Task> chooseFlights = taskService.createTaskQuery().taskDefinitionKey(USERTASK2)
 				.includeProcessVariables().list();
 		assertEquals(15, chooseFlights.size());
 		String id = chooseFlights.get(2).getId();
@@ -209,12 +229,12 @@ public class ReservationsTest extends Startup {
 		taskService.complete(id, variables);
 
 		// PAYMENT
-		List<Task> payments = taskService.createTaskQuery().taskDefinitionKey("usertask3").includeProcessVariables()
+		List<Task> payments = taskService.createTaskQuery().taskDefinitionKey(USERTASK3).includeProcessVariables()
 				.list();
 		assertEquals(1, payments.size());
 		firstTask = payments.get(0);
 		variables = firstTask.getProcessVariables();
-		Payment payment = (Payment) variables.get("payment");
+		Payment payment = (Payment) variables.get(PAYMENT);
 		payment.setCreditCard("MYHH3339YYTVF9988");
 		payment.setLastThreeCode("GH7");
 		assertNull(payment.getDate());
@@ -224,13 +244,13 @@ public class ReservationsTest extends Startup {
 		// VERIFY IF THE MAIL IS SENT
 		HistoricActivityInstanceQuery historicActivityInstanceQuery = historyService
 				.createHistoricActivityInstanceQuery();
-		List<HistoricActivityInstance> receiveTicket = historicActivityInstanceQuery.activityId("mailtask1").list();
+		List<HistoricActivityInstance> receiveTicket = historicActivityInstanceQuery.activityId(MAILTASK1).list();
 		assertEquals(1, receiveTicket.size());
 
 		// VERIFY IF THE STATES OF THE REQUESTED FLIGHTS ARE CHANGED
 		HistoricVariableInstanceQuery historicVariableInstanceQuery = historyService
 				.createHistoricVariableInstanceQuery();
-		List<HistoricVariableInstance> historyTickets = historicVariableInstanceQuery.variableName("tickets").list();
+		List<HistoricVariableInstance> historyTickets = historicVariableInstanceQuery.variableName(TICKETS).list();
 		@SuppressWarnings("unchecked")
 		List<Ticket> requestedTickets = historyTickets.stream().map(historic -> (List<Ticket>) historic.getValue())
 				.flatMap(l -> l.stream()).collect(toList());

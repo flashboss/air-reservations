@@ -13,6 +13,8 @@
  ******************************************************************************/
 package it.vige.reservations.bpm;
 
+import static it.vige.reservations.Constants.USERTASK6;
+import static it.vige.reservations.Constants.USERTASK7;
 import static org.activiti.engine.impl.context.Context.getProcessEngineConfiguration;
 
 import java.util.Date;
@@ -37,8 +39,8 @@ public class ExpireTickets implements JavaDelegate {
 	public void execute(DelegateExecution execution) {
 		TaskService taskService = getProcessEngineConfiguration().getTaskService();
 		TaskQuery taskQuery = taskService.createTaskQuery().includeProcessVariables().includeTaskLocalVariables();
-		List<Task> tasks = taskQuery.taskDefinitionKey("usertask6").list();
-		List<Task> staffTasks = taskQuery.taskDefinitionKey("usertask7").list();
+		List<Task> tasks = taskQuery.taskDefinitionKey(USERTASK6).list();
+		List<Task> staffTasks = taskQuery.taskDefinitionKey(USERTASK7).list();
 		tasks.addAll(staffTasks);
 		Date today = new Date();
 		for (Task task : tasks) {

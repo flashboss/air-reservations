@@ -35,7 +35,7 @@ The application manages the notifications through email and pdf attachments</des
 			<url>http://www.vige.it</url>
 		</developer>
 	</developers>
-	
+
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -79,18 +79,6 @@ The application manages the notifications through email and pdf attachments</des
 			<version>5.5.11</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>4.2.5.RELEASE</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.activiti</groupId>
-			<artifactId>activiti-webapp-explorer2</artifactId>
-			<version>5.21.0</version>
-			<type>war</type>
-		</dependency>
-		<dependency>
 			<groupId>org.subethamail</groupId>
 			<artifactId>subethasmtp</artifactId>
 			<version>3.1.7</version>
@@ -105,6 +93,12 @@ The application manages the notifications through email and pdf attachments</des
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<version>1.4.196</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.7.5</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

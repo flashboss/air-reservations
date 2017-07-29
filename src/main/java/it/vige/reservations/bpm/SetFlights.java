@@ -13,6 +13,10 @@
  ******************************************************************************/
 package it.vige.reservations.bpm;
 
+import static it.vige.reservations.Constants.CHOOSEN_FLIGHTS;
+import static it.vige.reservations.Constants.CURRENT_USER;
+import static it.vige.reservations.Constants.EMAIL;
+import static it.vige.reservations.Constants.FLIGHTS;
 import static org.activiti.engine.impl.context.Context.getProcessEngineConfiguration;
 
 import java.util.ArrayList;
@@ -34,11 +38,11 @@ public class SetFlights implements ExecutionListener {
 
 	@Override
 	public void notify(DelegateExecution execution) {
-		execution.setVariableLocal("flights", new ArrayList<Flight>());
-		execution.setVariableLocal("choosenFlights", new ArrayList<Flight>());
-		String currentUser = (String) execution.getVariable("currentUser");
+		execution.setVariableLocal(FLIGHTS, new ArrayList<Flight>());
+		execution.setVariableLocal(CHOOSEN_FLIGHTS, new ArrayList<Flight>());
+		String currentUser = (String) execution.getVariable(CURRENT_USER);
 		String email = getProcessEngineConfiguration().getIdentityService().getUserInfo(currentUser, "email");
-		execution.setVariableLocal("email", email);
+		execution.setVariableLocal(EMAIL, email);
 	}
 
 }

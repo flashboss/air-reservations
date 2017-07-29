@@ -13,6 +13,10 @@
  ******************************************************************************/
 package it.vige.reservations.bpm;
 
+import static it.vige.reservations.Constants.OPERATION;
+import static it.vige.reservations.Constants.TICKET;
+import static it.vige.reservations.Constants.TICKETS_TO_CANCEL;
+import static it.vige.reservations.Constants.USERTASK4;
 import static it.vige.reservations.State.CANCELED;
 import static org.activiti.engine.impl.context.Context.getProcessEngineConfiguration;
 
@@ -39,17 +43,17 @@ public class CancelTickets implements JavaDelegate {
 	@Override
 	public void execute(DelegateExecution execution) {
 		@SuppressWarnings("unchecked")
-		List<Ticket> tickets = (List<Ticket>) execution.getVariable("ticketsToCancel");
+		List<Ticket> tickets = (List<Ticket>) execution.getVariable(TICKETS_TO_CANCEL);
 		tickets.forEach(ticket -> ticket.getFlight().setState(CANCELED));
-		execution.setVariable("ticketsToCancel", tickets);
+		execution.setVariable(TICKETS_TO_CANCEL, tickets);
 		TaskService taskService = getProcessEngineConfiguration().getTaskService();
 		List<Task> tasks = taskService.createTaskQuery().includeProcessVariables().includeTaskLocalVariables()
-				.taskDefinitionKey("usertask4").list();
+				.taskDefinitionKey(USERTASK4).list();
 		for (Task task : tasks) {
-			Ticket ticket = (Ticket) taskService.getVariable(task.getId(), "ticket");
+			Ticket ticket = (Ticket) taskService.getVariable(task.getId(), TICKET);
 			if (tickets.contains(ticket)) {
 				Map<String, Object> variables = new HashMap<String, Object>();
-				variables.put("operation", CANCELED);
+				variables.put(OPERATION, CANCELED);
 				taskService.complete(task.getId(), variables);
 			}
 		}

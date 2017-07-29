@@ -13,6 +13,10 @@
  ******************************************************************************/
 package it.vige.reservations.bpm;
 
+import static it.vige.reservations.Constants.CURRENT_USER;
+import static it.vige.reservations.Constants.FILE_PATH;
+import static it.vige.reservations.Constants.PAYMENT;
+import static it.vige.reservations.Constants.TICKETS;
 import static java.lang.System.getProperty;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Logger.getLogger;
@@ -47,8 +51,8 @@ public class SetPayment implements TaskListener {
 
 	@Override
 	public void notify(DelegateTask delegateTask) {
-		Payment payment = (Payment) delegateTask.getVariable("payment");
-		payment.setUserName((String) delegateTask.getVariable("currentUser"));
+		Payment payment = (Payment) delegateTask.getVariable(PAYMENT);
+		payment.setUserName((String) delegateTask.getVariable(CURRENT_USER));
 		payment.setDate(new Date());
 		List<Ticket> tickets = new ArrayList<Ticket>();
 		payment.getFlights().forEach(flight -> tickets.add(new Ticket(flight, payment.getUserName())));
@@ -58,11 +62,11 @@ public class SetPayment implements TaskListener {
 			byte[] bytes = new byte[pdf.available()];
 			pdf.read(bytes);
 			outputStream.write(bytes);
-			delegateTask.getExecution().setVariableLocal("file_path", filePath);
+			delegateTask.getExecution().setVariableLocal(FILE_PATH, filePath);
 		} catch (IOException e) {
 			LOGGER.log(SEVERE, e.getMessage());
 		}
-		delegateTask.getExecution().setVariableLocal("tickets", tickets);
+		delegateTask.getExecution().setVariableLocal(TICKETS, tickets);
 	}
 
 }

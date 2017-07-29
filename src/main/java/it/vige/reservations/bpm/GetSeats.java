@@ -13,6 +13,9 @@
  ******************************************************************************/
 package it.vige.reservations.bpm;
 
+import static it.vige.reservations.Constants.SEATS;
+import static it.vige.reservations.Constants.TICKET;
+
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
 
@@ -29,9 +32,9 @@ public class GetSeats implements JavaDelegate {
 
 	@Override
 	public void execute(DelegateExecution execution) {
-		Ticket ticket = (Ticket) execution.getVariable("ticket");
+		Ticket ticket = (Ticket) execution.getVariable(TICKET);
 		String seats = new DemoData().getSeats(ticket.getFlight()) + "";
-		execution.setVariable("seats", seats);
+		execution.setVariable(SEATS, seats);
 	}
 
 }

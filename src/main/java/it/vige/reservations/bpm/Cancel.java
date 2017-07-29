@@ -13,6 +13,7 @@
  ******************************************************************************/
 package it.vige.reservations.bpm;
 
+import static it.vige.reservations.Constants.TICKET;
 import static it.vige.reservations.State.CANCELED;
 
 import org.activiti.engine.delegate.DelegateExecution;
@@ -30,9 +31,9 @@ public class Cancel implements JavaDelegate {
 
 	@Override
 	public void execute(DelegateExecution execution) {
-		Ticket ticket = (Ticket) execution.getVariable("ticket");
+		Ticket ticket = (Ticket) execution.getVariable(TICKET);
 		ticket.getFlight().setState(CANCELED);
-		execution.setVariable("ticket", ticket);
+		execution.setVariable(TICKET, ticket);
 	}
 
 }

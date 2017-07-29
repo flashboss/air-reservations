@@ -13,6 +13,9 @@
  ******************************************************************************/
 package it.vige.reservations.bpm;
 
+import static it.vige.reservations.Constants.SEAT;
+import static it.vige.reservations.Constants.SEATS;
+import static it.vige.reservations.Constants.TICKET;
 import static it.vige.reservations.State.CHECKOUT;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -36,12 +39,11 @@ public class Checkout implements TaskListener {
 
 	@Override
 	public void notify(DelegateTask delegateTask) {
-		Ticket ticket = (Ticket) delegateTask.getExecution().getVariable("ticket");
-		Object variable = delegateTask.getExecution().getVariable("seat");
+		Ticket ticket = (Ticket) delegateTask.getExecution().getVariable(TICKET);
+		Object variable = delegateTask.getExecution().getVariable(SEAT);
 		if (variable != null) {
 			long seat = (long) variable;
-			List<String> seatStr = asList(
-					((String) delegateTask.getExecution().getVariable("seats")).split("\\[|,|\\]"));
+			List<String> seatStr = asList(((String) delegateTask.getExecution().getVariable(SEATS)).split("\\[|,|\\]"));
 			seatStr = seatStr.subList(1, seatStr.size());
 			List<Long> seats = seatStr.stream().map(s -> new Long(s.trim())).collect(toList());
 			if (seats.contains(seat)) {

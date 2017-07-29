@@ -13,6 +13,7 @@
  ******************************************************************************/
 package it.vige.reservations.bpm;
 
+import static it.vige.reservations.Constants.TICKETS_TO_ALERT;
 import static it.vige.reservations.State.ALERTED;
 
 import java.util.List;
@@ -33,9 +34,9 @@ public class AlertTickets implements JavaDelegate {
 	@Override
 	public void execute(DelegateExecution execution) {
 		@SuppressWarnings("unchecked")
-		List<Ticket> tickets = (List<Ticket>) execution.getVariable("ticketsToAlert");
+		List<Ticket> tickets = (List<Ticket>) execution.getVariable(TICKETS_TO_ALERT);
 		tickets.forEach(ticket -> ticket.getFlight().setState(ALERTED));
-		execution.setVariable("ticketsToAlert", tickets);
+		execution.setVariable(TICKETS_TO_ALERT, tickets);
 	}
 
 }

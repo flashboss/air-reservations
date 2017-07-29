@@ -13,6 +13,13 @@
  ******************************************************************************/
 package it.vige.reservations.bpm;
 
+import static it.vige.reservations.Constants.ADDRESS_FROM;
+import static it.vige.reservations.Constants.ADDRESS_TO;
+import static it.vige.reservations.Constants.CHOOSEN_FLIGHTS;
+import static it.vige.reservations.Constants.DATE_FROM;
+import static it.vige.reservations.Constants.FLIGHTS;
+import static it.vige.reservations.Constants.PRIZE;
+
 import java.util.Date;
 import java.util.List;
 
@@ -38,15 +45,15 @@ public class UpdateFlights implements TaskListener {
 	public void notify(DelegateTask delegateTask) {
 		DemoData demoData = new DemoData();
 		@SuppressWarnings("unchecked")
-		List<Flight> flights = (List<Flight>) delegateTask.getExecution().getVariable("flights");
+		List<Flight> flights = (List<Flight>) delegateTask.getExecution().getVariable(FLIGHTS);
 		flights.clear();
 		@SuppressWarnings("unchecked")
-		List<Flight> choosenFlights = (List<Flight>) delegateTask.getExecution().getVariable("choosenFlights");
+		List<Flight> choosenFlights = (List<Flight>) delegateTask.getExecution().getVariable(CHOOSEN_FLIGHTS);
 		choosenFlights.clear();
-		Date dateFrom = (Date) delegateTask.getExecution().getVariable("dateFrom");
-		String addressTo = (String) delegateTask.getExecution().getVariable("addressTo");
-		String addressFrom = (String) delegateTask.getExecution().getVariable("addressFrom");
-		Object prize = delegateTask.getExecution().getVariable("prize");
+		Date dateFrom = (Date) delegateTask.getExecution().getVariable(DATE_FROM);
+		String addressTo = (String) delegateTask.getExecution().getVariable(ADDRESS_TO);
+		String addressFrom = (String) delegateTask.getExecution().getVariable(ADDRESS_FROM);
+		Object prize = delegateTask.getExecution().getVariable(PRIZE);
 		Flight flight = new Flight(null, dateFrom, null, new Address(null, null, addressTo),
 				new Address(null, null, addressFrom), prize != null ? (double) prize : null, null);
 		flights.addAll(demoData.getFlights(flight));

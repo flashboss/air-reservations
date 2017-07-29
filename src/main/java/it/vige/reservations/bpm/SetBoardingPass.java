@@ -13,6 +13,7 @@
  ******************************************************************************/
 package it.vige.reservations.bpm;
 
+import static it.vige.reservations.Constants.TICKET;
 import static org.activiti.engine.impl.context.Context.getProcessEngineConfiguration;
 
 import org.activiti.engine.TaskService;
@@ -34,7 +35,7 @@ public class SetBoardingPass implements TaskListener {
 
 	@Override
 	public void notify(DelegateTask delegateTask) {
-		Ticket ticket = (Ticket) delegateTask.getExecution().getVariable("ticket");
+		Ticket ticket = (Ticket) delegateTask.getExecution().getVariable(TICKET);
 
 		PDFGenerator generator = new PDFGenerator(ticket);
 		TaskService taskService = getProcessEngineConfiguration().getTaskService();

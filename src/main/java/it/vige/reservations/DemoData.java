@@ -29,7 +29,6 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.activiti.engine.impl.util.IoUtil.readInputStream;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -173,15 +172,15 @@ public class DemoData {
 	 */
 	public void initDemoUsers(IdentityService identityService) {
 		createUser(identityService, "kermit", "Kermit", "The Frog", "kermit", "kermit@activiti.org",
-				"org/activiti/explorer/images/kermit.jpg", Arrays.asList(STAFF, TRAVELER, "user", "admin"),
-				Arrays.asList("birthDate", "10-10-1955", "jobTitle", "Muppet", "location", "Hollywoord", "phone",
-						"+123456789", "twitterName", "alfresco", "skype", "activiti_kermit_frog"));
+				"org/activiti/explorer/images/kermit.jpg", asList(STAFF, TRAVELER, "user", "admin"),
+				asList("birthDate", "10-10-1955", "jobTitle", "Muppet", "location", "Hollywoord", "phone", "+123456789",
+						"twitterName", "alfresco", "skype", "activiti_kermit_frog"));
 
 		createUser(identityService, "gonzo", "Gonzo", "The Great", "gonzo", "gonzo@activiti.org",
-				"org/activiti/explorer/images/gonzo.jpg", Arrays.asList(TRAVELER, "user"),
+				"org/activiti/explorer/images/gonzo.jpg", asList(TRAVELER, "user"),
 				asList("email", "frodobaggins@vige.it"));
 		createUser(identityService, "fozzie", "Fozzie", "Bear", "fozzie", "fozzie@activiti.org",
-				"org/activiti/explorer/images/fozzie.jpg", Arrays.asList(STAFF, "user"),
+				"org/activiti/explorer/images/fozzie.jpg", asList(STAFF, "user"),
 				asList("email", "bilbobaggins@vige.it"));
 	}
 

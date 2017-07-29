@@ -13,6 +13,11 @@
  ******************************************************************************/
 package it.vige.reservations.bpm;
 
+import static it.vige.reservations.Constants.HOSTNAME;
+import static it.vige.reservations.Constants.TICKETS;
+import static it.vige.reservations.Constants.TICKETS_TO_ALERT;
+import static it.vige.reservations.Constants.TICKETS_TO_CANCEL;
+import static it.vige.reservations.Constants.USERTASK4;
 import static it.vige.reservations.DemoData.differenceBetween;
 import static it.vige.reservations.State.REQUESTED;
 import static java.net.InetAddress.getByName;
@@ -54,17 +59,17 @@ public class GetTicketsToSchedule implements JavaDelegate {
 
 		TaskService taskService = getProcessEngineConfiguration().getTaskService();
 		List<Task> tasks = taskService.createTaskQuery().includeProcessVariables().includeTaskLocalVariables()
-				.taskDefinitionKey("usertask4").active().list();
-		execution.setVariableLocal("ticketsToAlert", new ArrayList<Ticket>());
-		execution.setVariableLocal("ticketsToCancel", new ArrayList<Ticket>());
+				.taskDefinitionKey(USERTASK4).active().list();
+		execution.setVariableLocal(TICKETS_TO_ALERT, new ArrayList<Ticket>());
+		execution.setVariableLocal(TICKETS_TO_CANCEL, new ArrayList<Ticket>());
 		if (tasks.size() > 0) {
 			try {
-				execution.setVariableLocal("hostName", getByName("localhost"));
+				execution.setVariableLocal(HOSTNAME, getByName("localhost"));
 			} catch (UnknownHostException e) {
 				LOGGER.log(SEVERE, e.getMessage());
 			}
 			@SuppressWarnings("unchecked")
-			List<Ticket> tickets = (List<Ticket>) tasks.get(0).getProcessVariables().get("tickets");
+			List<Ticket> tickets = (List<Ticket>) tasks.get(0).getProcessVariables().get(TICKETS);
 			Date today = new Date();
 
 			List<Ticket> ticketsToAlert = tickets.stream().filter(ticket -> {
@@ -72,13 +77,13 @@ public class GetTicketsToSchedule implements JavaDelegate {
 				return difference <= MAX_HOURS_TO_ALERT && difference > MAX_HOURS_TO_CANCEL
 						&& ticket.getFlight().getState() == REQUESTED;
 			}).collect(toList());
-			execution.setVariableLocal("ticketsToAlert", ticketsToAlert);
+			execution.setVariableLocal(TICKETS_TO_ALERT, ticketsToAlert);
 
 			List<Ticket> ticketsToCancel = tickets.stream().filter(
 					ticket -> differenceBetween(ticket.getFlight().getStartTime(), today, HOURS) <= MAX_HOURS_TO_CANCEL
 							&& ticket.getFlight().getState() == REQUESTED)
 					.collect(toList());
-			execution.setVariableLocal("ticketsToCancel", ticketsToCancel);
+			execution.setVariableLocal(TICKETS_TO_CANCEL, ticketsToCancel);
 		}
 	}
 

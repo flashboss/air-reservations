@@ -13,6 +13,18 @@
  ******************************************************************************/
 package it.vige.reservations.test;
 
+import static it.vige.reservations.Constants.MAILTASK2;
+import static it.vige.reservations.Constants.OPERATION;
+import static it.vige.reservations.Constants.SCHEDULER;
+import static it.vige.reservations.Constants.SEAT;
+import static it.vige.reservations.Constants.SEATS;
+import static it.vige.reservations.Constants.TICKETS_TO_ALERT;
+import static it.vige.reservations.Constants.TICKETS_TO_CANCEL;
+import static it.vige.reservations.Constants.USERTASK4;
+import static it.vige.reservations.Constants.USERTASK5;
+import static it.vige.reservations.Constants.USERTASK6;
+import static it.vige.reservations.Constants.USERTASK7;
+import static it.vige.reservations.Constants.USERTASK8;
 import static it.vige.reservations.State.ALERTED;
 import static it.vige.reservations.State.CANCELED;
 import static it.vige.reservations.State.CHECKOUT;
@@ -62,19 +74,19 @@ public class SchedulerTest extends Startup {
 		identityService.setAuthenticatedUserId(ADMIN_USER_NAME);
 
 		// STARTING PROCESS
-		runtimeService.startProcessInstanceByKey("scheduler");
+		runtimeService.startProcessInstanceByKey(SCHEDULER);
 
 		// VERIFY IF THE MAIL IS SENT
 		HistoricActivityInstanceQuery historicActivityInstanceQuery = historyService
 				.createHistoricActivityInstanceQuery();
-		List<HistoricActivityInstance> tickets = historicActivityInstanceQuery.activityId("mailtask2").list();
+		List<HistoricActivityInstance> tickets = historicActivityInstanceQuery.activityId(MAILTASK2).list();
 		assertEquals(4, tickets.size());
 
 		// VERIFY IF THE STATES OF THE ALERTED FLIGHTS ARE CHANGED
 		HistoricVariableInstanceQuery historicVariableInstanceQuery = historyService
 				.createHistoricVariableInstanceQuery();
 		List<HistoricVariableInstance> historyAlertedTickets = historicVariableInstanceQuery
-				.variableName("ticketsToAlert").list();
+				.variableName(TICKETS_TO_ALERT).list();
 		@SuppressWarnings("unchecked")
 		List<Ticket> alertedTickets = historyAlertedTickets.stream().map(historic -> (List<Ticket>) historic.getValue())
 				.flatMap(l -> l.stream()).collect(toList());
@@ -83,16 +95,16 @@ public class SchedulerTest extends Startup {
 
 		// DELETE THE TASKS TO CLOSE THE PROCESSES
 		List<Task> tasks = taskService.createTaskQuery().includeProcessVariables().includeTaskLocalVariables()
-				.taskDefinitionKey("usertask4").active().list();
+				.taskDefinitionKey(USERTASK4).active().list();
 		for (Task task : tasks) {
 			Map<String, Object> variables = new HashMap<String, Object>();
-			variables.put("operation", CANCELED);
+			variables.put(OPERATION, CANCELED);
 			taskService.complete(task.getId(), variables);
 		}
 
 		// DELETE THE TASKS TO CLOSE THE PROCESSES
 		tasks = taskService.createTaskQuery().includeProcessVariables().includeTaskLocalVariables()
-				.taskDefinitionKey("usertask8").active().list();
+				.taskDefinitionKey(USERTASK8).active().list();
 		for (Task task : tasks)
 			taskService.complete(task.getId());
 		end();
@@ -114,7 +126,7 @@ public class SchedulerTest extends Startup {
 
 		// TO TEST THE CANCELED TASKS I MUST TO REPLACE THE CURRENT FLIGHT DATES
 		List<Task> tasks = taskService.createTaskQuery().includeProcessVariables().includeTaskLocalVariables()
-				.taskDefinitionKey("usertask4").active().list();
+				.taskDefinitionKey(USERTASK4).active().list();
 		for (Task task : tasks) {
 			Ticket ticket = (Ticket) taskService.getVariable(task.getId(), "ticket");
 			@SuppressWarnings("unchecked")
@@ -132,13 +144,13 @@ public class SchedulerTest extends Startup {
 		identityService.setAuthenticatedUserId(ADMIN_USER_NAME);
 
 		// STARTING PROCESS
-		runtimeService.startProcessInstanceByKey("scheduler");
+		runtimeService.startProcessInstanceByKey(SCHEDULER);
 
 		// VERIFY IF THE STATES OF THE CANCELED FLIGHTS ARE CHANGED
 		HistoricVariableInstanceQuery historicVariableInstanceQuery = historyService
 				.createHistoricVariableInstanceQuery();
 		List<HistoricVariableInstance> historyCanceledTickets = historicVariableInstanceQuery
-				.variableName("ticketsToCancel").list();
+				.variableName(TICKETS_TO_CANCEL).list();
 		@SuppressWarnings("unchecked")
 		List<Ticket> canceledTickets = historyCanceledTickets.stream()
 				.map(historic -> (List<Ticket>) historic.getValue()).flatMap(l -> l.stream()).collect(toList());
@@ -147,7 +159,7 @@ public class SchedulerTest extends Startup {
 
 		// DELETE THE TASKS TO CLOSE THE PROCESSES
 		tasks = taskService.createTaskQuery().includeProcessVariables().includeTaskLocalVariables()
-				.taskDefinitionKey("usertask8").active().list();
+				.taskDefinitionKey(USERTASK8).active().list();
 		for (Task task : tasks)
 			taskService.complete(task.getId());
 		end();
@@ -168,12 +180,12 @@ public class SchedulerTest extends Startup {
 		ReservationsTest.execute(runtimeService, taskService, historyService);
 
 		// MY TICKETS
-		List<Task> myTickets = taskService.createTaskQuery().taskDefinitionKey("usertask4").includeProcessVariables()
+		List<Task> myTickets = taskService.createTaskQuery().taskDefinitionKey(USERTASK4).includeProcessVariables()
 				.list();
 		assertEquals(4, myTickets.size());
 		Task task = myTickets.get(0);
 		Map<String, Object> variables = new HashMap<String, Object>();
-		variables.put("operation", CHECKOUT.name());
+		variables.put(OPERATION, CHECKOUT.name());
 		taskService.complete(task.getId(), variables);
 		task = myTickets.get(1);
 		taskService.complete(task.getId(), variables);
@@ -184,41 +196,41 @@ public class SchedulerTest extends Startup {
 
 		// TWO CHECKOUT PROCESS MUST BE STILL ACTIVE BECAUSE A NOT EXISTING SEAT
 		// WAS CHOOSEN
-		myTickets = taskService.createTaskQuery().taskDefinitionKey("usertask5").includeProcessVariables().list();
+		myTickets = taskService.createTaskQuery().taskDefinitionKey(USERTASK5).includeProcessVariables().list();
 		assertEquals(4, myTickets.size());
 		task = myTickets.get(0);
 		variables = taskService.getVariables(task.getId());
-		List<String> seatStr = asList(((String) variables.get("seats")).split("\\[|,|\\]"));
+		List<String> seatStr = asList(((String) variables.get(SEATS)).split("\\[|,|\\]"));
 		seatStr = seatStr.subList(1, seatStr.size());
 		List<Long> seats = seatStr.stream().map(s -> new Long(s.trim())).collect(toList());
-		variables.put("seat", seats.get(4));
+		variables.put(SEAT, seats.get(4));
 		taskService.complete(task.getId(), variables);
 		task = myTickets.get(1);
 		variables = taskService.getVariables(task.getId());
-		seatStr = asList(((String) variables.get("seats")).split("\\[|,|\\]"));
+		seatStr = asList(((String) variables.get(SEATS)).split("\\[|,|\\]"));
 		seatStr = seatStr.subList(1, seatStr.size());
 		seats = seatStr.stream().map(s -> new Long(s.trim())).collect(toList());
-		variables.put("seat", seats.get(5));
+		variables.put(SEAT, seats.get(5));
 		taskService.complete(task.getId(), variables);
 		task = myTickets.get(2);
 		variables = taskService.getVariables(task.getId());
-		seatStr = asList(((String) variables.get("seats")).split("\\[|,|\\]"));
+		seatStr = asList(((String) variables.get(SEATS)).split("\\[|,|\\]"));
 		seatStr = seatStr.subList(1, seatStr.size());
 		seats = seatStr.stream().map(s -> new Long(s.trim())).collect(toList());
-		variables.put("seat", seats.get(6));
+		variables.put(SEAT, seats.get(6));
 		taskService.complete(task.getId(), variables);
 		task = myTickets.get(3);
 		variables = taskService.getVariables(task.getId());
-		seatStr = asList(((String) variables.get("seats")).split("\\[|,|\\]"));
+		seatStr = asList(((String) variables.get(SEATS)).split("\\[|,|\\]"));
 		seatStr = seatStr.subList(1, seatStr.size());
 		seats = seatStr.stream().map(s -> new Long(s.trim())).collect(toList());
-		variables.put("seat", seats.get(7));
+		variables.put(SEAT, seats.get(7));
 		taskService.complete(task.getId(), variables);
 
 		// TO TEST THE EXPIRED TASKS I MUST TO REPLACE THE CURRENT DUE DATE
 		TaskQuery taskQuery = taskService.createTaskQuery().includeProcessVariables().includeTaskLocalVariables();
-		List<Task> tasks = taskQuery.taskDefinitionKey("usertask6").active().list();
-		List<Task> staffTasks = taskQuery.taskDefinitionKey("usertask7").list();
+		List<Task> tasks = taskQuery.taskDefinitionKey(USERTASK6).active().list();
+		List<Task> staffTasks = taskQuery.taskDefinitionKey(USERTASK7).list();
 		tasks.addAll(staffTasks);
 		for (Task usertask : tasks) {
 			taskService.setDueDate(usertask.getId(), new Date());
@@ -229,7 +241,7 @@ public class SchedulerTest extends Startup {
 		identityService.setAuthenticatedUserId(ADMIN_USER_NAME);
 
 		// STARTING PROCESS
-		runtimeService.startProcessInstanceByKey("scheduler");
+		runtimeService.startProcessInstanceByKey(SCHEDULER);
 
 		end();
 	}

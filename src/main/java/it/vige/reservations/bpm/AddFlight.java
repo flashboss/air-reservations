@@ -13,6 +13,8 @@
  ******************************************************************************/
 package it.vige.reservations.bpm;
 
+import static it.vige.reservations.Constants.CHOOSEN_FLIGHTS;
+import static it.vige.reservations.Constants.FLIGHT;
 import static it.vige.reservations.State.REQUESTED;
 
 import java.util.List;
@@ -35,8 +37,8 @@ public class AddFlight implements TaskListener {
 	@Override
 	public void notify(DelegateTask delegateTask) {
 		@SuppressWarnings("unchecked")
-		List<Flight> flights = (List<Flight>) delegateTask.getExecution().getVariable("choosenFlights");
-		Flight flight = (Flight) delegateTask.getVariable("flight");
+		List<Flight> flights = (List<Flight>) delegateTask.getExecution().getVariable(CHOOSEN_FLIGHTS);
+		Flight flight = (Flight) delegateTask.getVariable(FLIGHT);
 		flight.setState(REQUESTED);
 		flights.add(flight);
 	}
