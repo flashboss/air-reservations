@@ -39,7 +39,7 @@ public class GetPayment implements TaskListener {
 		@SuppressWarnings("unchecked")
 		List<Flight> flights = (List<Flight>) delegateTask.getVariable(CHOOSEN_FLIGHTS);
 		Payment payment = new Payment(flights);
-		delegateTask.getExecution().setVariableLocal(PAYMENT, payment);
+		delegateTask.getExecution().setVariable(PAYMENT, payment);
 	}
 
 }

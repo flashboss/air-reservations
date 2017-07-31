@@ -66,7 +66,7 @@ public class SetPayment implements TaskListener {
 		} catch (IOException e) {
 			LOGGER.log(SEVERE, e.getMessage());
 		}
-		delegateTask.getExecution().setVariableLocal(TICKETS, tickets);
+		delegateTask.getExecution().setVariable(TICKETS, tickets);
 	}
 
 }

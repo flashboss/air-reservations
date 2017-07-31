@@ -138,7 +138,8 @@ public class ReservationsTest extends Startup {
 		variables.put(SEAT, seats.get(5));
 		taskService.complete(task.getId(), variables);
 
-		// THE TRAVELER RECEIVES THE BOARDING PASSES FOR THE TICKET IN CHECKOUT STATE
+		// THE TRAVELER RECEIVES THE BOARDING PASSES FOR THE TICKET IN CHECKOUT
+		// STATE
 		List<Task> myBoardingPasses = taskService.createTaskQuery().taskDefinitionKey(USERTASK6)
 				.includeProcessVariables().list();
 		assertEquals(2, myBoardingPasses.size());
@@ -158,8 +159,8 @@ public class ReservationsTest extends Startup {
 		myBoardingPasses.forEach(t -> taskService.complete(t.getId()));
 
 		// THE STAFF RECEIVES THE NOTIFICATIONS FOR THE TICKET IN CHECKOUT STATE
-		List<Task> staffCheckoutTickets = taskService.createTaskQuery().taskDefinitionKey(USERTASK7).includeProcessVariables()
-				.list();
+		List<Task> staffCheckoutTickets = taskService.createTaskQuery().taskDefinitionKey(USERTASK7)
+				.includeProcessVariables().list();
 		assertEquals(2, staffCheckoutTickets.size());
 		task = staffCheckoutTickets.get(0);
 		dueDate = ((Ticket) task.getProcessVariables().get(TICKET)).getFlight().getArriveTime();
@@ -171,8 +172,8 @@ public class ReservationsTest extends Startup {
 		staffCheckoutTickets.forEach(t -> taskService.complete(t.getId()));
 
 		// THE STAFF RECEIVES THE NOTIFICATIONS FOR THE TICKET IN CANCEL STATE
-		List<Task> staffCancelTickets = taskService.createTaskQuery().taskDefinitionKey(USERTASK8).includeProcessVariables()
-				.list();
+		List<Task> staffCancelTickets = taskService.createTaskQuery().taskDefinitionKey(USERTASK8)
+				.includeProcessVariables().list();
 		assertEquals(2, staffCancelTickets.size());
 		task = staffCancelTickets.get(0);
 		dueDate = ((Ticket) task.getProcessVariables().get(TICKET)).getFlight().getArriveTime();
@@ -203,8 +204,8 @@ public class ReservationsTest extends Startup {
 		runtimeService.startProcessInstanceByKey(RESERVATIONS);
 
 		// SEARCH FLIGHTS
-		List<Task> searchFlights = taskService.createTaskQuery().taskDefinitionKey(USERTASK1)
-				.includeProcessVariables().list();
+		List<Task> searchFlights = taskService.createTaskQuery().taskDefinitionKey(USERTASK1).includeProcessVariables()
+				.list();
 		assertEquals(1, searchFlights.size());
 		Map<String, Object> variables = new HashMap<String, Object>();
 		variables.put(DATE_FROM, getDate(2016, 7, 3));
@@ -215,8 +216,8 @@ public class ReservationsTest extends Startup {
 		taskService.complete(firstTask.getId(), variables);
 
 		// CHOOSE FLIGHTS
-		List<Task> chooseFlights = taskService.createTaskQuery().taskDefinitionKey(USERTASK2)
-				.includeProcessVariables().list();
+		List<Task> chooseFlights = taskService.createTaskQuery().taskDefinitionKey(USERTASK2).includeProcessVariables()
+				.list();
 		assertEquals(15, chooseFlights.size());
 		String id = chooseFlights.get(2).getId();
 		taskService.claim(id, TRAVELER_USER_NAME);
