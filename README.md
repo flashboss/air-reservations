@@ -40,7 +40,7 @@ To start only the unit test cases digit:
   
   Tests can be started one to one too with the command, for example in the case of reservations test:
      
-    mvn test -DReservationsTest
+    mvn test -Dit.vige.reservtions.test.ReservationsTest
 
 To change the configuration of the mail server to point to a different server:
 

@@ -97,7 +97,7 @@ public class DemoData {
 	 * @param email
 	 *            Email of the user. It will be used to receive the messages
 	 * @param imageResource
-	 *            Image availbale in the profile view of the user
+	 *            Image available in the profile view of the user
 	 * @param groups
 	 *            groups of the users. The user can be an admin, staff or
 	 *            traveler

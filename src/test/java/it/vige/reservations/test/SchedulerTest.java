@@ -28,6 +28,7 @@ import static it.vige.reservations.Constants.USERTASK8;
 import static it.vige.reservations.State.ALERTED;
 import static it.vige.reservations.State.CANCELED;
 import static it.vige.reservations.State.CHECKOUT;
+import static it.vige.reservations.test.ReservationsTest.execute;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
@@ -67,7 +68,7 @@ public class SchedulerTest extends Startup {
 		identityService.setAuthenticatedUserId(TRAVELER_USER_NAME);
 
 		// STARTING RESERVATIONS PROCESS. I NEED TO GET TICKETS IN THE DB
-		ReservationsTest.execute(runtimeService, taskService, historyService);
+		execute(runtimeService, taskService, historyService);
 
 		// AUTHENTICATION
 		// Always reset authenticated user to avoid any mistakes
@@ -122,7 +123,7 @@ public class SchedulerTest extends Startup {
 		identityService.setAuthenticatedUserId(TRAVELER_USER_NAME);
 
 		// STARTING RESERVATIONS PROCESS. I NEED TO GET TICKETS IN THE DB
-		ReservationsTest.execute(runtimeService, taskService, historyService);
+		execute(runtimeService, taskService, historyService);
 
 		// TO TEST THE CANCELED TASKS I MUST TO REPLACE THE CURRENT FLIGHT DATES
 		List<Task> tasks = taskService.createTaskQuery().includeProcessVariables().includeTaskLocalVariables()
@@ -177,7 +178,7 @@ public class SchedulerTest extends Startup {
 		identityService.setAuthenticatedUserId(TRAVELER_USER_NAME);
 
 		// STARTING RESERVATIONS PROCESS. I NEED TO GET TICKETS IN THE DB
-		ReservationsTest.execute(runtimeService, taskService, historyService);
+		execute(runtimeService, taskService, historyService);
 
 		// MY TICKETS
 		List<Task> myTickets = taskService.createTaskQuery().taskDefinitionKey(USERTASK4).includeProcessVariables()

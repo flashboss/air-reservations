@@ -58,7 +58,6 @@ public class GetTicketsToSchedule implements JavaDelegate {
 
 	@Override
 	public void execute(DelegateExecution execution) {
-
 		TaskService taskService = getProcessEngineConfiguration().getTaskService();
 		List<Task> tasks = taskService.createTaskQuery().includeProcessVariables().includeTaskLocalVariables()
 				.taskDefinitionKey(USERTASK4).active().list();
