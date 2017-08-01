@@ -161,5 +161,9 @@ public interface Constants {
 	 * The informations of the password
 	 */
 	String PASSWORD = "password";
+	/**
+	 * a service to return the email of the choosen user
+	 */
+	String EMAIL_CALCULATOR = "email_calculator";
 
 }

@@ -13,6 +13,7 @@
  ******************************************************************************/
 package it.vige.reservations.bpm;
 
+import static it.vige.reservations.Constants.EMAIL_CALCULATOR;
 import static it.vige.reservations.Constants.HOSTNAME;
 import static it.vige.reservations.Constants.TICKETS;
 import static it.vige.reservations.Constants.TICKETS_TO_ALERT;
@@ -38,6 +39,7 @@ import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.activiti.engine.task.Task;
 
+import it.vige.reservations.EmailCalculator;
 import it.vige.reservations.model.Ticket;
 
 /**
@@ -84,6 +86,7 @@ public class GetTicketsToSchedule implements JavaDelegate {
 							&& ticket.getFlight().getState() == REQUESTED)
 					.collect(toList());
 			execution.setVariableLocal(TICKETS_TO_CANCEL, ticketsToCancel);
+			execution.setVariable(EMAIL_CALCULATOR, new EmailCalculator());
 		}
 	}
 

@@ -12,7 +12,7 @@
       <serviceTask id="mailtask2" name="Send Invite to checkout" activiti:type="mail">
         <extensionElements>
           <activiti:field name="to">
-            <activiti:expression><![CDATA[#{execution.engineServices.identityService.getUserInfo(ticketToAlert.userName,"email")}]]></activiti:expression>
+            <activiti:expression><![CDATA[#{execution.getVariable("email_calculator").getEmail(ticketToAlert.userName)}]]></activiti:expression>
           </activiti:field>
           <activiti:field name="from">
             <activiti:string><![CDATA[no_reply@vige.it]]></activiti:string>
