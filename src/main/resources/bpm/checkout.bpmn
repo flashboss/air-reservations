@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
-  <process id="checkout" name="My process" isExecutable="true">
-    <startEvent id="startevent1" name="Start"></startEvent>
+  <process id="checkout" name="Checkout Activiti Process" isExecutable="true">
+    <startEvent id="startevent1" name="Start">
+      <extensionElements>
+        <activiti:executionListener event="start" class="it.vige.reservations.bpm.GetSeats"></activiti:executionListener>
+      </extensionElements>
+    </startEvent>
     <userTask id="usertask5" name="Choose Seat" activiti:assignee="#{currentUser}" activiti:candidateGroups="traveler">
       <extensionElements>
         <activiti:formProperty id="from" name="From" type="string" expression="#{ticket.flight.addressFrom.toString()}" writable="false"></activiti:formProperty>
@@ -84,7 +88,7 @@
         <omgdc:Bounds height="40.0" width="40.0" x="360.0" y="300.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="inclusivegateway2" id="BPMNShape_inclusivegateway2">
-        <omgdc:Bounds height="40.0" width="40.0" x="410.0" y="470.0"></omgdc:Bounds>
+        <omgdc:Bounds height="40.0" width="40.0" x="408.0" y="479.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
         <omgdc:Bounds height="35.0" width="35.0" x="540.0" y="460.0"></omgdc:Bounds>
@@ -116,14 +120,14 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
         <omgdi:waypoint x="232.0" y="451.0"></omgdi:waypoint>
-        <omgdi:waypoint x="430.0" y="470.0"></omgdi:waypoint>
+        <omgdi:waypoint x="428.0" y="479.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
         <omgdi:waypoint x="533.0" y="401.0"></omgdi:waypoint>
-        <omgdi:waypoint x="430.0" y="470.0"></omgdi:waypoint>
+        <omgdi:waypoint x="428.0" y="479.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
-        <omgdi:waypoint x="450.0" y="490.0"></omgdi:waypoint>
+        <omgdi:waypoint x="448.0" y="499.0"></omgdi:waypoint>
         <omgdi:waypoint x="540.0" y="477.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
